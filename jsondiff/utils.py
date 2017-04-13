@@ -4,11 +4,19 @@ from StringIO import StringIO
 import json_diff
 import json
 
+def change_to_str(a):
+    if isinstance(a, str):
+        return True, StringIO(a)
+    elif isinstance(a, (dict, tuple, list, )):
+        # return True, json.dumps(a, ensure_ascii=False)
+        return True, json.dumps(a)
+    else:
+        return False, False
 
-def compare_json():
-    diffator = json_diff.Comparator(StringIO('{"a": true}'), StringIO('{"a": false}'))
-    diff = ("\n".join([line.strip()
-                       for line in unicode(
-            json_diff.HTMLFormatter(diffator.compare_dicts())).
-                      split("\n")])).strip()
-    return diff
+def compare_json(a, b):
+    reta, stra = change_to_str(a)
+    retb, strb = change_to_str(b)
+    if not all([reta, retb]):
+        return False, False
+    diffator = json_diff.Comparator(stra, strb)
+    return True, diffator.compare_dicts()

@@ -21,7 +21,9 @@ manager = Manager(app)
 
 @manager.command
 def testJsonDiff():
-    diff = compare_json()
+    str1 = '{"fixedDataStruct":"wandacredit","resultCode":"10000","resultMessage":"处理失败","dataMap":{"errorMessage":"session过期,请使用refreshToken更新","errorDisplay":8,"errorCode":"5001"}}'
+    str2 = '{"fixedDataStruct":"wandacredit","resultCode":"10000","resultMessage":"处理失败","dataMap":{"errorMessage":"session过期,请使用refreshToken更新2","errorDisplay":8,"errorCode":"5001"}}'
+    ret, diff = compare_json(str1, str2)
     print diff
 
 
