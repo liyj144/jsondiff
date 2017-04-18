@@ -8,6 +8,18 @@ import { connect } from 'react-redux';
 require('./Jsondiff.scss');
 
 class Jsondiff extends Component {
+  render() {
+    return (
+        <div className="mega">
+          <div className="header">
+            123
+          </div>
+          <main>
+
+          </main>
+        </div>
+    );
+  }
 
 }
 
