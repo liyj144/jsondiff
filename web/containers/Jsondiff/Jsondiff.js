@@ -4,6 +4,11 @@
 
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/java';
+import 'brace/theme/github';
 
 require('./Jsondiff.scss');
 
@@ -12,10 +17,15 @@ class Jsondiff extends Component {
     return (
         <div className="mega">
           <div className="header">
-            123
+            JSON 字符串格式化
           </div>
           <main>
-
+            <AceEditor
+                mode="json"
+                theme="monokai"
+                name="origin_json"
+                editorProps={{$blockScrolling: true}}
+              />
           </main>
         </div>
     );
