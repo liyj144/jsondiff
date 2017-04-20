@@ -9,7 +9,7 @@ import AceEditor from 'react-ace';
 import 'brace/mode/json';
 import 'brace/theme/monokai';
 
-var jsonlint = require("jsonlint");
+let jsonlint = require("jsonlint");
 require('./Jsondiff.scss');
 
 class Jsondiff extends Component {
@@ -43,9 +43,10 @@ class Jsondiff extends Component {
         `
         }
 
-    formatJson() {
+    formatJson(event) {
         //console.log(jsonlint.parse('{"creative?": false}'));
-        console.log(this.refs.myTextInput);
+        console.log(event);
+        // console.log(this.refs.jsonInput);
         // console.log(jsonlint.parse(this.refs.jsonInput));
     }
     render() {
