@@ -1,7 +1,7 @@
 /**
  * Created by liyanjie on 2017/4/16.
  */
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import Posts from '../../components/Posts/Posts';
@@ -12,7 +12,7 @@ import { Icon } from 'antd';
 
 require('./App.scss');
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
