@@ -1,4 +1,7 @@
 {
-    "presets":["react", "es2015", "stage-0"],
-    "plugins": ["syntax-async-functions","transform-regenerator", "transform-decorators-legacy"]
+    "presets": ["es2015", "stage-0", "react"],
+    "plugins": ["espower", "transform-runtime", "transform-decorators-legacy", ["antd", [{ "libraryName": "antd" }]], ["webpack-alias", {"config": "${process.cwd()}/webpack-test.config.js"}]],
+    "env": {
+        
+    }
 }
