@@ -96,6 +96,7 @@
     "redux": "~3.5.2",
     "redux-actions": "~0.10.1",
     "redux-thunk": "~2.1.0",
+    "underscore": "^1.8.3",
     "webpack": "~1.13.1"
   },
   "ava": {

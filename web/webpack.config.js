@@ -19,7 +19,7 @@ module.exports = {
     chunkFilename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.json'],
+    extensions: ['', '.js', '.jsx', '.json'],
     alias: {
       components: __dirname + '/app/components',
       actions: __dirname + '/app/actions',
