@@ -81,6 +81,7 @@
     "isomorphic-fetch": "~2.2.1",
     "jsonlint": "^1.6.2",
     "moment": "~2.14.1",
+    "node-sass": "^4.5.2",
     "open-browser-webpack-plugin": "~0.0.2",
     "rc-queue-anim": "^0.12.6",
     "rc-tween-one": "~0.8.5",

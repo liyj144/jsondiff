@@ -1,5 +1,7 @@
 .mega{
   background: #fff;
+  padding-bottom: 20px;
+  padding-left: 10px;
 }
 .header{
   background-color: #f8f8f8;
@@ -7,4 +9,8 @@
   border-radius: 4px;
   text-align: center;
   position: relative;
+}
+.button-group{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, hashHistory } from 'react-router'
-import { Modal } from 'antd'
+import { Button, Modal } from 'antd'
 import AceEditor from 'react-ace'
 import 'brace/mode/json'
 import 'brace/theme/monokai'
@@ -42,14 +42,18 @@ export default class jsonView extends Component {
   "geo": {
     "latitude": "40.75",
     "longitude": "73.98"
-  }123
-} 
-        `,
+  }
+}`,
             formatErrorKey: 1,
             formatErrorVisible: false
         }
 
         this.formatJson = this.formatJson.bind(this)
+        this.changeJsonStr = this.changeJsonStr.bind(this)
+    }
+
+    changeJsonStr(newVal) {
+        this.setState({jsonStr: newVal})
     }
 
     formatJson() {
@@ -73,14 +77,16 @@ export default class jsonView extends Component {
           </div>
           <main>
             <AceEditor
-                ref="jsonInput"
                 mode="json"
                 theme="monokai"
                 name="origin_json"
+                onChange={this.changeJsonStr}
                 value={this.state.jsonStr}
                 editorProps={{$blockScrolling: true}}
               />
-              <button onClick={this.formatJson}>格式化</button>
+              <div className="button-group">
+                <Button type="primary" onClick={this.formatJson}>格式化</Button>
+              </div>
           </main>
         </div>
     );
