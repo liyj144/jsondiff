@@ -2,6 +2,7 @@
   background: #fff;
   padding-bottom: 20px;
   padding-left: 10px;
+  padding-right: 10px;
 }
 .header{
   background-color: #f8f8f8;
@@ -10,12 +11,25 @@
   text-align: center;
   position: relative;
 }
+.align-center{
+  text-align: center;
+}
 .button-group{
   margin-top: 20px;
   margin-bottom: 20px;
 }
-.changeMarker{
-  background:rgba(100,200,100,0.5);
+.changeMarker-missing{
+  background: RGBA(215, 225, 223, 0.5);
+  z-index:20;
+  position:absolute;
+}
+.changeMarker-type{
+  background: RGBA(51,51,153, 0.5);
+  z-index:20;
+  position:absolute;
+}
+.changeMarker-unequal{
+  background: RGBA(234, 225, 224, 0.5);
   z-index:20;
   position:absolute;
 }

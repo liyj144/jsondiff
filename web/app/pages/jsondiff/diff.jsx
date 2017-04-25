@@ -24,58 +24,11 @@ export default class jsonDiff extends Component {
         this.state = {
             originMarker: [],
             compareMarker: [],
-            jsonStrOrigin: `
-           {
-  "@context": {
-    "name": "http://schema.org/name","description": "http://schema.org/description",
-    "image": {
-      "@id": "http://schema.org/image","@type": "@id"
-    },
-    "geo": "http://schema.org/geo",
-    "latitude": {
-      "@id": "http://schema.org/latitude",
-      "@type": "xsd:float"
-    },
-    "longitude": {
-      "@id": "http://schema.org/longitude",
-      "@type": "xsd:float"
-    },
-    "xsd": "http://www.w3.org/2001/XMLSchema#"
-  },
-  "name": "The Empire State Building",
-  "description": "The Empire State Building is a 102-story landmark in New York City.",
-  "image": "http://www.civil.usherbrooke.ca/cours/gci215a/empire-state-building.jpg",
-  "geo": {
-    "latitude": "40.75",
-    "longitude": "73.98"
-  }
-}`,
+            originAnnotation: [],
+            compareAnnotation: [],
+            jsonStrOrigin: '{"Aidan Gillen": {"array": ["Game of Thron\\"es","The Wire"],"string": "some string","int": 2,"aboolean": true, "boolean": true,"object": {"foo": "bar","object1": {"new prop1": "new prop value"},"object2": {"new prop1": "new prop value"},"object3": {"new prop1": "new prop value"},"object4": {"new prop1": "new prop value"}}},"Amy Ryan": {"one": "In Treatment","two": "The Wire"},"Annie Fitzgerald": ["Big Love","True Blood"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsgard": ["Generation Kill","True Blood"], "Clarke Peters": null}',
             jsonStrCompare: `
-           {
-  "@context": {
-    "name": "http://schema.org/name","description": "http://schema.org/description",
-    "image": {
-      "@id": "http://schema.org/image","@type": "@id"
-    },
-    "geo": "http://schema.org/geo",
-    "latitude": {
-      "@id": "http://schema.org/latitude2",
-      "@type": "xsd:float"
-    },
-    "longitude": {
-      "@id": "http://schema.org/longitude",
-      "@type": "xsd:float"
-    },
-    "xsd": "http://www.w3.org/2001/XMLSchema#"
-  },
-  "name": "The Empire State Building",
-  "description": "The Empire State Building is a 102-story landmark in New York City.",
-  "image": "http://www.civil.usherbrooke.ca/cours/gci215a/empire-state-building.jpg",
-  "geo": {
-    "latitude": "40.75",
-    "longitude": "74.98"
-  }
-}`,
+           {"Aidan Gillen": {"array": ["Game of Thrones","The Wire"],"string": "some string","int": "2","otherint": 4, "aboolean": "true", "boolean": false,"object": {"foo": "bar"}},"Amy Ryan": ["In Treatment","The Wire"],"Annie Fitzgerald": ["True Blood","Big Love","The Sopranos","Oz"],"Anwan Glover": ["Treme","The Wire"],"Alexander Skarsg?rd": ["Generation Kill","True Blood"],"Alice Farmer": ["The Corner","Oz","The Wire"]}`,
             formatErrorKey: 1,
             formatErrorVisible: false
         }
@@ -103,6 +56,7 @@ export default class jsonDiff extends Component {
                 title: "提示",
                 content: "源JSON格式不正确，异常如下：" + e
             })
+            return
         }
         try {
             parseJsonCompare = jsonlint.parse(this.state.jsonStrCompare)
@@ -111,6 +65,7 @@ export default class jsonDiff extends Component {
                 title: "提示",
                 content: "对比JSON格式不正确，异常如下：" + e
             })
+            return
         }
         jdd.diffs = []
         let config1 = jdd.createConfig()
@@ -132,18 +87,41 @@ export default class jsonDiff extends Component {
         this.state.compareMarker.forEach(function(id) {
             compareSession.removeMarker(id)
         })
+
         let originMarker = []
         let compareMarker = []
+        let originAnnotation = []
+        let compareAnnotation = []
+        console.log(jdd.diffs)
         jdd.diffs.forEach(function (item) {
             let line1 = item['path1']['line'] - 1
             let line2 = item['path2']['line'] - 1
-            // originEditor.selection.moveCursorToPosition({ row: item['path1']['line'] - 1, column: 0 });
-            // originEditor.selection.selectLine();
-            originMarker.push(originSession.addMarker(new Range(line1, 0, line1, -1), "changeMarker", "fullLine"))
-            compareMarker.push(compareSession.addMarker(new Range(line2, 0, line2, -1), "changeMarker", "fullLine"))
+            let markerType = ''
+            let annotationText = item['msg']
+            switch(item['type']){
+                case 'type':
+                    markerType = 'changeMarker-type'
+                    break;
+                case 'eq':
+                    markerType = 'changeMarker-unequal'
+                    break;
+                case 'missing':
+                    markerType = 'changeMarker-missing'
+                    break;
+                default:
+                    break;
+            }
+            originAnnotation.push({row: line1, column: 0, type: 'warning', text: annotationText})
+            compareAnnotation.push({row: line2, column: 0, type: 'warning', text: annotationText})
+            if(markerType){
+                originMarker.push(originSession.addMarker(new Range(line1, 0, line1, -1), markerType, "fullLine"))
+                compareMarker.push(compareSession.addMarker(new Range(line2, 0, line2, -1), markerType, "fullLine"))
+            }
         })
         this.setState({originMarker, originMarker})
         this.setState({compareMarker, compareMarker})
+        this.setState({originAnnotation, originAnnotation})
+        this.setState({compareAnnotation, compareAnnotation})
     }
 
     render() {
@@ -159,13 +137,15 @@ export default class jsonDiff extends Component {
                                 mode="json"
                                 theme="monokai"
                                 name="compareJson"
+                                width="100%"
                                 ref="originJson"
+                                annotations={this.state.originAnnotation}
                                 onChange={this.changeJsonStr.bind(this, 'origin')}
                                 value={this.state.jsonStrOrigin}
-                                editorProps={{ $blockScrolling: true }}
+                                editorProps={{ $blockScrolling: true, $useWorker: false }}
                             />
                         </Col>
-                        <Col span={2}>
+                        <Col span={2} className={"align-center"}>
                             <Button type="primary" onClick={this.compareJson}>对比</Button>
                         </Col>
                         <Col span={11}>
@@ -173,7 +153,9 @@ export default class jsonDiff extends Component {
                                 mode="json"
                                 theme="monokai"
                                 name="compareJson"
+                                width="100%"
                                 ref="compareJson"
+                                annotations={this.state.compareAnnotation}
                                 onChange={this.changeJsonStr.bind(this, 'compare')}
                                 value={this.state.jsonStrCompare}
                                 editorProps={{ $blockScrolling: true }}
